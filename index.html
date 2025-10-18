@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>NextGen Legends</title>
+<style>
+:root{
+  --bg:#080808; --card:#0f0f12; --muted:#9aa0a6; --text:#efefef; --accent:#d4af37;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,Arial,sans-serif;background:var(--bg);color:var(--text)}
+.wrap{max-width:980px;margin:0 auto;padding:16px}
+.header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 0}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#b3861f)}
+.h1{font-weight:800}
+.card{background:var(--card);border:1px solid #1a1a1a;padding:14px;border-radius:14px;margin-top:12px}
+.row{display:flex;gap:8px;align-items:center}
+.input,textarea,select{width:100%;padding:10px;border-radius:10px;border:1px solid #222;background:#0b0b0d;color:var(--text)}
+textarea{min-height:80px;resize:vertical}
+.btn{padding:10px 14px;border-radius:10px;border:0;background:#111;color:var(--text);cursor:pointer}
+.btn.primary{background:var(--accent);color:#081010;font-weight:700}
+.small{color:var(--muted);font-size:13px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{background:#0b0b0d;padding:6px 10px;border-radius:999px;border:1px solid #202020;font-size:13px;cursor:pointer}
+.hidden{display:none}
+.section-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.phase{border-left:3px solid var(--accent);padding:10px;border-radius:8px;background:#09090b;margin-bottom:8px}
+.list{margin:0;padding-left:18px}
+.note{font-size:13px;color:var(--muted)}
+.card-scroll{max-height:300px;overflow:auto;padding-right:6px}
+.chat{background:#0b0b0d;padding:10px;border-radius:10px;border:1px solid #222;max-height:180px;overflow:auto}
+.message{margin-bottom:8px}
+.user{color:#9ad3ff}
+.bot{color:#d4af37}
+.kpi{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.kpi .k{background:#0b0b0d;padding:10px;border-radius:10px;border:1px solid #1a1a1a;min-width:120px}
+.badge{padding:6px 10px;border-radius:999px;background:#111;border:1px solid #222;font-weight:700}
+.footer{margin-top:18px;color:var(--muted);text-align:center;font-size:13px;}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:18px;background:#111;border:1px solid #333;padding:10px 14px;border-radius:10px;z-index:9999}
+@media(max-width:600px){
+  .wrap{padding:12px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="header">
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <div class="h1">NextGen Legends</div>
+        <div class="small">Be the business tycoon — private studio</div>
+      </div>
+    </div>
+    <div class="row"><button id="lockBtn" class="btn">🔒 Lock</button></div>
+  </div>
+
+  <!-- GATE -->
+  <div id="gate" class="card">
+    <div class="section-title">
+      <h3>Private Access</h3>
+      <div class="badge">Default code: nazish-lock-nayab</div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <input id="access" class="input" type="password" placeholder="Enter access code" />
+      <button id="enter" class="btn primary">Unlock</button>
+    </div>
+    <p class="note" style="margin-top:8px">App local-first: data sirf aapke device par save hota hai.</p>
+
+    <div style="display:flex;gap:8px;margin-top:12px;align-items:center">
+      <button id="gateReset" class="btn">Forgot / Reset Code</button>
+      <button id="showHelp" class="btn">How to add to Home Screen</button>
+      <div class="small" style="color:var(--muted)">(Reset restores default code — data safe)</div>
+    </div>
+  </div>
+
+  <!-- APP -->
+  <div id="app" class="hidden">
+
+    <!-- HERO -->
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;gap:12px;align-items:center">
+        <div>
+          <div style="font-weight:800;font-size:20px">Welcome, Legend.</div>
+          <div class="small">Idea → Roadmap → Design → Launch → Earn</div>
+        </div>
+        <div class="chips">
+          <div class="chip">Brand Team</div><div class="chip">Web Team</div><div class="chip">Video Team</div><div class="chip">Growth</div><div class="chip">Security</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN (stacked) -->
+    <div>
+
+      <!-- Roadmap -->
+      <div class="card">
+        <div class="section-title"><h3>AI Roadmap Builder</h3><div class="small">Idea → Timeline → Auto Roadmap</div></div>
+        <label class="small">Idea / Goal</label>
+        <textarea id="idea" class="input" placeholder="e.g., Launch modest wear collection — 45 days, 200 orders"></textarea>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <input id="start" class="input" type="date" style="flex:1" />
+          <input id="len" class="input" type="number" value="8" style="width:90px" />
+          <select id="unit" class="input" style="width:120px">
+            <option value="weeks">Weeks</option><option value="days">Days</option><option value="months">Months</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <select id="budgetType" class="input" style="width:160px"><option value="none">No Budget</option><option value="has">I have budget</option></select>
+          <input id="budgetAmt" class="input" type="number" placeholder="Amount (INR)" style="flex:1" disabled />
+        </div>
+        <div style="margin-top:8px">
+          <div class="chips">
+            <div class="chip toggle active" data-key="ig">IG</div>
+            <div class="chip toggle active" data-key="yt">YT</div>
+            <div class="chip toggle" data-key="fb">FB</div>
+            <div class="chip toggle active" data-key="wa">WA</div>
+            <div class="chip toggle active" data-key="web">WEB</div>
+          </div>
+        </div>
+        <div style="margin-top:10px"><button id="gen" class="btn primary">Generate Roadmap</button> <button id="savePlan" class="btn">Save</button></div>
+        <div id="roadOut" class="card card-scroll" style="margin-top:10px"></div>
+      </div>
+
+      <!-- Design -->
+      <div class="card">
+        <div class="section-title"><h3>Design · Branding · Content</h3><div class="small">Logo maker, brand kit, captions</div></div>
+        <div style="display:flex;gap:8px">
+          <select id="palette" class="input"><option>Black + Gold + White</option><option>Ivory + Rose</option><option>Emerald + White</option></select>
+          <select id="style" class="input"><option>Premium / Minimal</option><option>Aesthetic</option><option>Editorial</option></select>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button id="genLogo" class="btn">Generate Logo (PNG)</button>
+          <button id="downloadBrand" class="btn">Download Brand Kit</button>
+          <button id="genCopy" class="btn">Generate Caption</button>
+        </div>
+        <div id="brandOut" class="note" style="margin-top:8px"></div>
+      </div>
+
+      <!-- Web Builder -->
+      <div class="card">
+        <div class="section-title"><h3>Web Builder</h3><div class="small">Quick export of a ready web page</div></div>
+        <input id="webTone" class="input" placeholder="e.g., Luxury · Minimal">
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button id="exportWeb" class="btn primary">Export index.html</button>
+          <button id="exportWebZip" class="btn">Export Zip</button>
+        </div>
+      </div>
+
+      <!-- Video Ads -->
+      <div class="card">
+        <div class="section-title"><h3>Smart Video Ads</h3><div class="small">Auto scripts + plan</div></div>
+        <div style="display:flex;gap:8px">
+          <select id="videoStyle" class="input"><option>Classic</option><option>Aesthetic</option><option>Party</option><option>Pop</option><option>Royal</option><option>Other</option></select>
+          <input id="videoOther" class="input" placeholder="If Other: describe">
+        </div>
+        <div style="margin-top:8px">
+          <input id="videoUpload" type="file" accept="image/*,video/*" class="input">
+          <div style="margin-top:8px"><button id="genAd" class="btn primary">Generate Ad Plan</button> <button id="exportAd" class="btn">Export Script</button></div>
+        </div>
+        <div id="adOut" class="note" style="margin-top:8px"></div>
+      </div>
+
+      <!-- Funding / Trends / Earnings -->
+      <div class="card">
+        <div class="section-title"><h3>Funding · Trends · Earning</h3><div class="small">City-based funding tips & estimators</div></div>
+        <div style="display:flex;gap:8px">
+          <input id="city" class="input" placeholder="Your City (e.g., Jaipur)">
+          <select id="stage" class="input"><option>Idea stage</option><option>Prototype</option><option>Early sales</option><option>Scale-up</option></select>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button id="findFunds" class="btn primary">Find Funding Options</button>
+          <button id="trendBtn" class="btn">Show Trends</button>
+        </div>
+        <div id="fundOut" class="card card-scroll" style="margin-top:8px"></div>
+
+        <div style="margin-top:8px">
+          <label class="small">Earning Estimator</label>
+          <div style="display:flex;gap:8px">
+            <input id="price" class="input" placeholder="Price per unit (INR)">
+            <input id="units" class="input" placeholder="Expected monthly units">
+            <button id="estEarn" class="btn">Estimate</button>
+          </div>
+          <div id="earnOut" class="note" style="margin-top:8px"></div>
+        </div>
+      </div>
+
+      <!-- Collaboration & Doubt -->
+      <div class="card">
+        <div class="section-title"><h3>Collaboration · Doubt Solver</h3><div class="small">Invite placeholders & AI mentor</div></div>
+        <div style="display:flex;gap:8px">
+          <input id="inviteName" class="input" placeholder="Invite by name/role (Designer A)">
+          <button id="inviteBtn" class="btn">Invite</button>
+        </div>
+        <div id="teamList" class="chips" style="margin-top:8px"></div>
+
+        <div style="margin-top:12px" class="card">
+          <div class="small">Doubt Solver (offline rule-based)</div>
+          <div class="chat" id="chat"><div class="message bot">Namaste! Main aapka AI Mentor hoon. Type your doubt.</div></div>
+          <div style="display:flex;gap:8px;margin-top:8px"><input id="q" class="input" placeholder="e.g., How to make a reel?"><button id="ask" class="btn primary">Ask</button></div>
+        </div>
+      </div>
+
+      <!-- Security & Quick Actions -->
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <b>Security</b><div class="small">Choose level & change code</div>
+          </div>
+          <div>
+            <select id="secLevel" class="input"><option>Easy</option><option>Smart</option><option>Hard</option></select>
+            <button id="applySec" class="btn primary">Apply</button>
+            <button id="chgCode" class="btn">Change Code</button>
+          </div>
+        </div>
+
+        <div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <b>Quick Actions</b><div class="small">Save / Export / Print</div>
+          </div>
+          <div>
+            <button id="exportJSON" class="btn">Export JSON</button>
+            <button id="printBtn" class="btn">Print</button>
+          </div>
+        </div>
+        <div class="note" style="margin-top:8px">Data saved locally on device. Backup JSON to move devices.</div>
+      </div>
+
+    </div>
+
+    <div class="footer">© NextGen Legends — Built for you</div>
+  </div>
+
+</div>
+
+<!-- simple toast -->
+<div id="toast" class="toast hidden"></div>
+
+<script>
+// Keys
+const ACCESS_KEY = 'lgw_access_code';
+const PLAN_KEY = 'lgw_plan_v1';
+const TEAM_KEY = 'lgw_team_v1';
+const DEFAULT_CODE = 'nazish-lock-nayab';
+
+// helpers
+const $ = id => document.getElementById(id);
+const toast = (t, time=2500)=>{ const el=$('toast'); el.textContent=t; el.classList.remove('hidden'); setTimeout(()=>el.classList.add('hidden'), time); }
+function showGate(show){ $('gate').classList.toggle('hidden', !show); $('app').classList.toggle('hidden', show); }
+function getCode(){ return localStorage.getItem(ACCESS_KEY) || DEFAULT_CODE; }
+
+// init
+window.addEventListener('DOMContentLoaded', ()=>{
+  const d = new Date().toISOString().slice(0,10);
+  if($('start')) $('start').value = d;
+  loadTeam();
+  renderTrends();
+  // if access already set and unlocked, show app
+  // (We keep default locked to protect privacy)
+});
+
+// unlock
+$('enter').onclick = ()=>{
+  const v = $('access').value.trim();
+  if(!v){ alert('Code daalein'); return; }
+  if(v === getCode()){ showGate(true); toast('Unlocked — Welcome 👑'); }
+  else { alert('Wrong code — Agar bhool gaye toh Reset karein'); }
+};
+
+// lock back
+$('lockBtn').onclick = ()=> showGate(false);
+
+// gate reset (restore default code)
+$('gateReset').onclick = ()=>{
+  const ok = confirm('Reset karne par access code default par aa jayega. Continue?');
+  if(!ok) return;
+  localStorage.setItem(ACCESS_KEY, DEFAULT_CODE);
+  toast('Reset ho gaya — Default code: ' + DEFAULT_CODE, 3500);
+};
+
+// show help to add to home
+$('showHelp').onclick = ()=>{
+  alert('Chrome menu → Add to Home screen → Name: NextGen Legends → Add\n(Isse app tumhare home screen par aa jayega.)');
+};
+
+// change code (inside app)
+$('chgCode').onclick = ()=>{
+  const cur = prompt('Enter current code:','');
+  if(cur !== getCode()){ alert('Current code galat'); return; }
+  const next = prompt('Enter new code (min 6 chars):','');
+  if(!next || next.length<6){ alert('Too short'); return; }
+  localStorage.setItem(ACCESS_KEY, next);
+  toast('Access code updated');
+};
+
+// apply security (demo)
+$('applySec').onclick = ()=>{
+  const level = $('secLevel').value;
+  alert('Applied security level: ' + level + '\n(Note: Advanced OTP/biometrics require native app integration.)');
+};
+
+// toggles for chips
+document.addEventListener('click', (e)=>{
+  if(e.target.classList.contains('chip') && e.target.classList.contains('toggle')){
+    e.target.classList.toggle('active');
+  }
+});
+
+// budget enable
+const budgetType = $('budgetType'); if(budgetType) budgetType.addEventListener('change', (e)=>{ $('budgetAmt').disabled = e.target.value !== 'has'; if($('budgetAmt').disabled) $('budgetAmt').value=''; });
+
+// Generate Roadmap
+function toDays(len,unit){
+  const n = parseInt(len) || 1;
+  if(unit==='days') return Math.max(1, Math.min(365, n));
+  if(unit==='weeks') return Math.max(7, Math.min(365, n*7));
+  return Math.max(30, Math.min(540, n*30));
+}
+function addDays(d, days){ const x=new Date(d); x.setDate(x.getDate()+days); return x; }
+function fmt(d){ return new Date(d).toLocaleDateString('en-IN',{year:'numeric',month:'short',day:'numeric'}); }
+
+$('gen') && $('gen').addEventListener('click', ()=>{
+  const idea = $('idea').value.trim();
+  if(!idea){ alert('Idea likho pehle'); return; }
+  const start = $('start').value || new Date().toISOString().slice(0,10);
+  const totalDays = toDays($('len').value, $('unit').value);
+  const hasBudget = $('budgetType').value==='has';
+  const amount = hasBudget ? parseInt($('budgetAmt').value||'0') : 0;
+  const channels = {}; document.querySelectorAll('.toggle').forEach(b=> channels[b.dataset.key]=b.classList.contains('active'));
+  const base = [
+    {name:'Discovery & Research',p:10},
+    {name:'Brand Strategy & Identity',p:15},
+    {name:'Design System & Logo',p:15},
+    {name:'Website / Storefront',p:20},
+    {name:'Content & Creatives',p:20},
+    {name:'Social & Marketing',p:15},
+    {name:'Launch & Review',p:5}
+  ];
+  if(!channels.web){ base[3].p -=5; base[5].p +=5; }
+  const days = base.map(x=> Math.max(1, Math.round(totalDays*x.p/100)));
+  const sum = days.reduce((a,b)=>a+b,0); days[days.length-1] += (totalDays - sum);
+  let cursor = new Date(start);
+  const schedule = base.map((b,i)=>{
+    const s = new Date(cursor); const e = addDays(cursor, days[i]-1); cursor = addDays(e,1);
+    const tasks = [
+      'Market & competitor sweep (5-10)',
+      'Target audience define and USP',
+      'Logo & brand kit (3 options)',
+      'Landing page + waitlist',
+      'Content calendar + 12 posts',
+      'Micro-influencer outreach',
+      'Soft launch + feedback'
+    ];
+    return { name:b.name, days:days[i], start:s, end:e, tasks: tasks.slice(0, Math.min(5, tasks.length)) };
+  });
+  const out = $('roadOut'); out.innerHTML='';
+  schedule.forEach(p=>{
+    const div = document.createElement('div'); div.className='phase';
+    div.innerHTML = `<h4 style="margin:0 0 6px 0">${p.name} • <span class="small">${p.days}d</span></h4><div class="small">${fmt(p.start)} → ${fmt(p.end)}</div><ul class="list">${p.tasks.map(t=>'<li>'+t+'</li>').join('')}</ul>`;
+    out.appendChild(div);
+  });
+  const plan = { idea, start, totalDays, amount, channels, schedule, created: new Date().toISOString() };
+  localStorage.setItem(PLAN_KEY, JSON.stringify(plan));
+  toast('Roadmap generated & saved locally');
+});
+
+// Save plan (download)
+$('savePlan') && $('savePlan').addEventListener('click', ()=>{
+  const raw = localStorage.getItem(PLAN_KEY);
+  if(!raw) { alert('Generate plan first'); return; }
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([raw],{type:'application/json'})); a.download = 'lgw_plan.json'; a.click();
+});
+
+// Design / brand
+$('genLogo') && $('genLogo').addEventListener('click', ()=>{
+  const canvas = document.createElement('canvas'); canvas.width=800; canvas.height=300;
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#0b0b0d'; ctx.fillRect(0,0,800,300);
+  ctx.fillStyle = '#d4af37'; ctx.font='bold 64px serif'; ctx.fillText('NextGen',40,120);
+  ctx.fillStyle = '#fff'; ctx.font='28px serif'; ctx.fillText('Legends',40,170);
+  const a = document.createElement('a'); a.href = canvas.toDataURL('image/png'); a.download='ng_logo.png'; a.click();
+  toast('Logo generated (PNG)');
+});
+$('downloadBrand') && $('downloadBrand').addEventListener('click', ()=>{
+  const data = { name:'NextGen Legends', palette: $('palette').value, style: $('style').value };
+  const blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='brand_kit.json'; a.click();
+  toast('Brand kit downloaded');
+});
+$('genCopy') && $('genCopy').addEventListener('click', ()=>{
+  const idea = $('idea').value.trim() || 'Your product';
+  const tone = $('style').value || 'Premium';
+  const copy = `${idea} — ${tone} collection. Order now! Limited stock. #NextGenLegends`;
+  $('brandOut').textContent = copy;
+  const a=document.createElement('a'); a.href = URL.createObjectURL(new Blob([copy],{type:'text/plain'})); a.download='caption.txt'; a.click();
+  toast('Caption generated');
+});
+
+// Web export
+$('exportWeb') && $('exportWeb').addEventListener('click', ()=>{
+  const tone = $('webTone').value || 'Luxury • Minimal';
+  const html = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NextGen Legends</title><style>body{font-family:Inter,system-ui;background:#0b0b0b;color:#fff;padding:24px}</style></head><body><h1>NextGen Legends</h1><p>${tone}</p></body></html>`;
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([html],{type:'text/html'})); a.download='index.html'; a.click();
+  toast('index.html downloaded');
+});
+$('exportWebZip') && $('exportWebZip').addEventListener('click', ()=>{
+  // simple zip-like: download HTML only (zip would need library)
+  $('exportWeb') && $('exportWeb').click();
+});
+
+// Video ad plan
+$('genAd') && $('genAd').addEventListener('click', ()=>{
+  const style = $('videoStyle').value;
+  const other = $('videoOther').value.trim();
+  const chosen = style === 'Other' && other ? other : style;
+  const script = `Ad style: ${chosen}\nHook (0-2s): Strong visual + bold line\nMid (3-10s): Show product + benefits\nSocial proof (11-13s): quick testimonial\nCTA (14-15s): Order now`;
+  localStorage.setItem('lgw_last_ad', script);
+  $('adOut').textContent = script;
+  toast('Ad plan generated');
+});
+$('exportAd') && $('exportAd').addEventListener('click', ()=>{
+  const s = localStorage.getItem('lgw_last_ad') || 'Generate ad first';
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([s],{type:'text/plain'})); a.download='ad_script.txt'; a.click();
+});
+
+// Funding & Trends
+$('findFunds') && $('findFunds').addEventListener('click', ()=>{
+  const city = $('city').value.trim() || 'Your city';
+  const stage = $('stage').value;
+  const recs = [
+    {title:'Government / MSME', items:['MSME registration & subsidies','State craft missions','District Industry Cell']},
+    {title:'Incubators & Grants', items:['City incubators','University innovation cells']},
+    {title:'Crowdfunding', items:['Pre-order campaigns','Local pre-sales']},
+    {title:'Local Partners', items:['Boutique consignment','Retail tie-ups']},
+    {title:'Micro Loans', items:['Micro loan platforms','Small NBFCs']}
+  ];
+  const out = $('fundOut'); out.innerHTML = '';
+  recs.forEach(r=>{
+    const d = document.createElement('div'); d.style.marginBottom='8px';
+    d.innerHTML = `<b>${r.title}</b><ul class="list">${r.items.map(i=>'<li>'+i+'</li>').join('')}</ul>`;
+    out.appendChild(d);
+  });
+  const note = document.createElement('div'); note.className='note'; note.textContent = `Tip: Start with pre-orders in ${city} to validate & collect funds.`;
+  out.appendChild(note);
+  toast('Funding options shown');
+});
+function renderTrends(){
+  const list = [
+    {t:'Sustainable fabrics',d:'Organic cotton, recycled blends'},
+    {t:'Minimal luxury',d:'Black + gold, clean silhouettes'},
+    {t:'Short-form video focus',d:'Reels & Shorts optimized edits'},
+    {t:'Local craft revival',d:'Hand-embroidered, block prints'},
+    {t:'Limited drops',d:'Direct-to-consumer drops & waitlists'}
+  ];
+  const out = $('fundOut');
+  // we leave initial trends empty (rendered when user clicks Show Trends)
+  window._ng_trends = list;
+}
+$('trendBtn') && $('trendBtn').addEventListener('click', ()=>{
+  const list = window._ng_trends || [];
+  const out = $('fundOut'); out.innerHTML = '';
+  list.forEach(it=>{
+    const d = document.createElement('div'); d.style.marginBottom='8px';
+    d.innerHTML = `<b>${it.t}</b><div class="small">${it.d}</div>`;
+    out.appendChild(d);
+  });
+  toast('Trends shown');
+});
+
+// Earnings
+$('estEarn') && $('estEarn').addEventListener('click', ()=>{
+  const price = parseFloat($('price').value)||0; const units = parseInt($('units').value)||0;
+  const rev = price * units; const cost = Math.round(rev * 0.6); const profit = rev - cost;
+  $('earnOut').textContent = `Est. Revenue: ₹${rev.toLocaleString()}, Est. Profit after costs: ₹${profit.toLocaleString()} (60% cost)`;
+});
+
+// Collaboration / team
+function loadTeam(){ const raw = localStorage.getItem(TEAM_KEY); const list = raw ? JSON.parse(raw) : []; const container = $('teamList'); container.innerHTML=''; list.forEach(p=>{ const d=document.createElement('div'); d.className='chip'; d.textContent = p; container.appendChild(d); }); }
+$('inviteBtn') && $('inviteBtn').addEventListener('click', ()=>{
+  const name = $('inviteName').value.trim(); if(!name) return alert('Enter name/role'); const raw = localStorage.getItem(TEAM_KEY); const list = raw? JSON.parse(raw):[]; list.push(name); localStorage.setItem(TEAM_KEY, JSON.stringify(list)); loadTeam(); $('inviteName').value=''; toast('Invite placeholder added');
+});
+loadTeam();
+
+// Doubt solver (simple)
+$('ask') && $('ask').addEventListener('click', ()=>{
+  const q = $('q').value.trim(); if(!q) return; const chat = $('chat');
+  const user = document.createElement('div'); user.className='message user'; user.innerHTML = `<div class="user"><b>You:</b> ${q}</div>`; chat.appendChild(user);
+  let ans = 'Main steps: Define problem → Set goal → Choose platform → Create MVP → Launch & measure. Type specific like "reel hook" for targeted help.';
+  const low = q.toLowerCase();
+  if(low.includes('logo')) ans = 'Logo tips: simple monogram, 2 colours, export SVG & PNG.';
+  else if(low.includes('reel') || low.includes('video')) ans = 'Video tips: hook in 2s, show product movement, add text overlay, end with CTA.';
+  else if(low.includes('fund') || low.includes('money')) ans = 'Start with pre-orders, local boutiques, micro-loans; then approach incubators.';
+  const bot = document.createElement('div'); bot.className='message bot'; bot.innerHTML = `<div class="bot"><b>Mentor:</b> ${ans}</div>`; chat.appendChild(bot); chat.scrollTop = chat.scrollHeight; $('q').value=''; toast('Answer ready');
+});
+
+// Export JSON / Print
+$('exportJSON') && $('exportJSON').addEventListener('click', ()=>{
+  const data = { plan: JSON.parse(localStorage.getItem(PLAN_KEY) || '{}'), team: JSON.parse(localStorage.getItem(TEAM_KEY) || '[]'), code: getCode() };
+  const a=document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'})); a.download='ng_backup.json'; a.click();
+  toast('Backup exported');
+});
+$('printBtn') && $('printBtn').addEventListener('click', ()=> window.print());
+
+// simple UI: show app if unlocked
+// If user saved "unlocked" state, we can respect it — but to be secure we require code each session
+// (So app stays private). If you want auto-unlock, we can add that later.
+
+// convenience: if someone enters default code in gate input, pressing enter triggers unlock
+$('access').addEventListener('keydown', (e)=>{ if(e.key === 'Enter') $('enter').click(); });
+
+// Some friendly UX: if the app is already unlocked in this session, you can show app.
+(function checkSessionUnlock(){
+  // nothing automatic for security
+})();
+
+</script>
+</body>
+</html>

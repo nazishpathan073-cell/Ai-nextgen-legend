@@ -266,7 +266,7 @@ window.addEventListener('DOMContentLoaded', ()=>{
 $('enter').onclick = ()=>{
   const v = $('access').value.trim();
   if(!v){ alert('Code daalein'); return; }
-  if(v === getCode()){ showGate(true); toast('Unlocked — Welcome 👑'); }
+  if(v === getCode()){ showGate(false); toast('Unlocked — Welcome 👑'); }
   else { alert('Wrong code — Agar bhool gaye toh Reset karein'); }
 };
 
